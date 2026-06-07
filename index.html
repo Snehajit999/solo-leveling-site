@@ -549,11 +549,13 @@ section.vis .sbi{width:100%;}
   document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
 
   const music = document.getElementById('bgMusic');
-
-  if(sndOn){
-    music.play();
-  } else {
-    music.pause();
+  // Added check in case file not found
+  if(music) {
+    if(sndOn){
+      music.play().catch(e => console.log("Audio play blocked or file not found:", e));
+    } else {
+      music.pause();
+    }
   }
 });
 })();
