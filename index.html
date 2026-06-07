@@ -544,13 +544,21 @@ section.vis .sbi{width:100%;}
   ploop();
 
   sndBtn.addEventListener('click',()=>{
-    sndOn=!sndOn;
-    sndBtn.classList.toggle('snd-on',sndOn);
-    document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
-  });
+  sndOn=!sndOn;
+  sndBtn.classList.toggle('snd-on',sndOn);
+  document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
+
+  const music = document.getElementById('bgMusic');
+
+  if(sndOn){
+    music.play();
+  } else {
+    music.pause();
+  }
+});
 })();
 </script>
-    <audio id="bgMusic" controls loop>
+    <audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
