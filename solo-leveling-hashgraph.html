@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Solo Leveling | Rise of the Shadow Monarch</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg0:#06000e;--bg1:#080010;--bg2:#0a0014;--bg3:#0c0018;
+  --vio:#7b1fa2;--vio2:#9c27b0;--vio3:#a855f7;
+  --pale:#c9b8e8;--dim:#7a5fa0;--muted:#4a3070;--ghost:#2a1040;
+  --font-head:'Cinzel',serif;--font-body:'Crimson Pro',serif;--font-mono:'DM Mono',monospace;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg0);color:var(--pale);font-family:var(--font-body);}
+/* CURSOR */
+#cur{position:fixed;width:7px;height:7px;background:#c084fc;border-radius:50%;pointer-events:none;z-index:9000;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .15s,height .15s;}
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(168,85,247,.4);border-radius:50%;pointer-events:none;z-index:8999;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s;}
+body.cur-big #cur{width:14px;height:14px;background:#e879f9;}
+body.cur-big #cur-ring{width:52px;height:52px;border-color:rgba(168,85,247,.7);}
+/* PARTICLES */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;}
+.pt{position:absolute;border-radius:50%;opacity:0;animation:pfloat linear infinite;}
+@keyframes pfloat{0%{opacity:0;transform:translateY(100vh) scale(0);}10%{opacity:.7;}90%{opacity:.2;}100%{opacity:0;transform:translateY(-40px) scale(2);}}
+/* NAV */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:700;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:32px 56px;
+  background:linear-gradient(to bottom,rgba(6,0,14,.9) 0%,transparent 100%);
+  backdrop-filter:blur(0px);
+}
+.nav-logo{
+  font-family:var(--font-head);font-size:11px;letter-spacing:.18em;
+  color:#a855f7;text-decoration:none;text-transform:uppercase;font-weight:400;
+  transition:color .3s,text-shadow .3s;cursor:none;
+}
+.nav-logo:hover{color:#e9d5ff;text-shadow:0 0 10px rgba(168,85,247,.9),0 0 30px rgba(168,85,247,.4);}
+.nav-right{display:flex;align-items:center;gap:32px;}
+.nav-link{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;
+  color:var(--muted);text-decoration:none;text-transform:uppercase;
+  cursor:none;transition:color .3s,text-shadow .3s;
+}
+.nav-link:hover{color:#c084fc;text-shadow:0 0 8px rgba(192,132,252,.8),0 0 20px rgba(168,85,247,.4);}
+.nav-sound{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;
+  color:var(--muted);background:none;border:none;cursor:none;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;transition:color .3s;
+}
+.nav-sound:hover{color:#c084fc;}
+.snd-dot{width:5px;height:5px;border-radius:50%;background:#7b1fa2;animation:sdpulse 2s ease infinite;}
+.snd-on .snd-dot{background:#a855f7;}
+@keyframes sdpulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:1}}
+/* SIDE DOTS */
+#nav-dots{
+  position:fixed;right:56px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:12px;z-index:700;
+}
+.nd{width:4px;height:4px;border-radius:50%;background:var(--ghost);cursor:none;transition:all .4s;}
+.nd.on{background:#a855f7;height:18px;border-radius:2px;box-shadow:0 0 8px rgba(168,85,247,.6);}
+/* PROGRESS */
+#prog{position:fixed;bottom:0;left:0;height:1px;background:linear-gradient(90deg,#7b1fa2,#a855f7,#e879f9);width:0%;z-index:900;pointer-events:none;box-shadow:0 0 6px rgba(168,85,247,.5);}
+/* SCROLL */
+#vp{position:fixed;top:0;left:0;width:100%;height:100vh;overflow:hidden;}
+#track{will-change:transform;}
+/* SECTIONS */
+section{width:100%;min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:130px 56px 72px;flex-shrink:0;}
+/* BG AURA PER SECTION */
+.aura{position:absolute;inset:0;pointer-events:none;}
+#s0 .aura{background:radial-gradient(ellipse 70% 60% at 30% 40%,rgba(100,0,180,.12) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 70% 70%,rgba(60,0,120,.08) 0%,transparent 60%);}
+#s1 .aura{background:radial-gradient(ellipse 60% 50% at 20% 60%,rgba(120,0,200,.08) 0%,transparent 60%);}
+#s2 .aura{background:radial-gradient(ellipse 50% 60% at 80% 30%,rgba(80,0,160,.1) 0%,transparent 60%);}
+#s3 .aura{background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(100,0,180,.07) 0%,transparent 60%);}
+#s4 .aura{background:radial-gradient(ellipse 60% 80% at 40% 50%,rgba(120,0,200,.09) 0%,transparent 60%);}
+#s5 .aura{background:radial-gradient(ellipse 50% 50% at 60% 40%,rgba(80,0,160,.07) 0%,transparent 60%);}
+/* GRID OVERLAY */
+.sec-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(120,0,200,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(120,0,200,.018) 1px,transparent 1px);
+  background-size:80px 80px;
+}
+/* HERO */
+#s0{background:var(--bg0);justify-content:center;overflow:hidden;padding-top:0;}
+.hero-orb{
+  position:absolute;width:700px;height:700px;border-radius:50%;
+  border:1px solid rgba(168,85,247,.06);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:orbpulse 9s ease-in-out infinite;
+}
+.hero-orb::before{content:'';position:absolute;inset:80px;border-radius:50%;border:1px solid rgba(168,85,247,.04);animation:orbpulse 7s ease-in-out infinite reverse;}
+.hero-orb::after{content:'';position:absolute;inset:160px;border-radius:50%;border:1px solid rgba(168,85,247,.03);animation:orbpulse 11s ease-in-out infinite;}
+@keyframes orbpulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.05);}}
+.hero-content{position:relative;z-index:2;padding:0 56px;}
+.hero-eyebrow{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.3em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:20px;
+}
+.hero-h1{
+  font-family:var(--font-head);
+  font-size:clamp(56px,9vw,130px);
+  font-weight:300;line-height:.97;letter-spacing:-.03em;overflow:hidden;
+}
+.hero-h1 .ln{display:block;overflow:hidden;}
+.hero-h1 .ln span{display:block;transform:translateY(108%);will-change:transform;}
+.hero-sub{
+  font-family:var(--font-body);font-style:italic;
+  font-size:clamp(14px,1.6vw,20px);color:var(--muted);
+  margin-top:20px;overflow:hidden;
+}
+.hero-sub span{display:block;transform:translateY(108%);will-change:transform;}
+.hero-scroll{
+  position:absolute;bottom:72px;left:112px;z-index:2;
+  display:flex;align-items:center;gap:18px;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;color:var(--ghost);text-transform:uppercase;
+}
+.s-line{width:52px;height:1px;background:var(--ghost);position:relative;overflow:hidden;}
+.s-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--vio);animation:scan 2.5s ease infinite;}
+@keyframes scan{0%{left:-100%}100%{left:100%}}
+.abs-num{position:absolute;right:56px;bottom:72px;font-family:var(--font-mono);font-size:9px;color:var(--ghost);letter-spacing:.12em;}
+/* GLOW TEXT */
+.gt{transition:color .3s,text-shadow .3s;cursor:default;}
+.gt:hover{
+  color:#f0e8ff;
+  text-shadow:0 0 8px rgba(192,132,252,1),0 0 18px rgba(168,85,247,.8),0 0 40px rgba(140,0,255,.5),0 0 80px rgba(100,0,200,.3);
+}
+.bh{font-family:var(--font-head);transition:all .3s;cursor:default;}
+.bh:hover{
+  color:#f5eeff;
+  text-shadow:0 0 12px rgba(192,132,252,1),0 0 24px rgba(168,85,247,.8),0 0 50px rgba(140,0,255,.5),0 0 100px rgba(100,0,200,.25);
+  filter:drop-shadow(0 0 8px rgba(168,85,247,.5));
+}
+/* CONTENT SECTIONS */
+.tag{font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:44px;}
+.btitle{font-family:var(--font-head);font-size:clamp(38px,5.8vw,84px);font-weight:300;line-height:1.02;letter-spacing:-.025em;margin-bottom:48px;}
+.btext{max-width:600px;font-size:15px;line-height:2;color:var(--dim);margin-bottom:40px;font-weight:300;}
+.btext strong{color:#9f7cc0;font-weight:400;}
+/* SEC BORDER */
+.sec-border{position:absolute;top:0;left:56px;right:56px;height:1px;background:rgba(120,0,200,.1);}
+.sbi{position:absolute;top:0;left:0;height:1px;width:0;background:rgba(168,85,247,.3);transition:width 1.6s cubic-bezier(.16,1,.3,1) .2s;box-shadow:0 0 4px rgba(168,85,247,.4);}
+section.vis .sbi{width:100%;}
+/* SECTIONS BG */
+#s1{background:var(--bg1);}
+#s2{background:var(--bg2);}
+#s3{background:var(--bg1);padding-bottom:0;}
+#s4{background:var(--bg2);}
+#s5{background:var(--bg0);border-top:1px solid rgba(120,0,200,.12);justify-content:flex-start;padding-top:84px;min-height:auto;}
+/* CTA */
+.cta{
+  display:inline-flex;align-items:center;gap:14px;
+  border:1px solid rgba(120,0,200,.25);padding:16px 32px;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;
+  cursor:none;transition:all .4s;background:none;
+}
+.cta:hover{
+  border-color:rgba(168,85,247,.6);color:#c084fc;
+  background:rgba(168,85,247,.05);
+  box-shadow:0 0 20px rgba(168,85,247,.12),inset 0 0 20px rgba(168,85,247,.04);
+}
+.cta svg{transition:transform .4s;}
+.cta:hover svg{transform:translateX(5px);}
+/* GENRE PILLS */
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;}
+.pill{
+  padding:5px 16px;border:1px solid rgba(168,85,247,.2);
+  border-radius:20px;font-family:var(--font-head);font-size:10px;letter-spacing:.1em;
+  color:#7b4fa0;background:rgba(168,85,247,.04);cursor:default;
+  transition:all .3s;
+}
+.pill:hover{
+  border-color:#a855f7;background:rgba(168,85,247,.12);color:#c084fc;
+  box-shadow:0 0 12px rgba(168,85,247,.3),0 0 28px rgba(168,85,247,.12);
+}
+/* TWO COL LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+/* INFO TABLE */
+.info-block{font-size:13px;}
+.info-row{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid rgba(120,0,200,.08);}
+.info-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;padding-top:2px;}
+.info-val{color:var(--dim);line-height:1.7;}
+/* TEAM GRID */
+.team-outer{width:calc(100% + 112px);margin-left:-56px;margin-top:8px;}
+.team-grid{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid rgba(120,0,200,.1);}
+.tc{padding:36px 22px 44px;border-right:1px solid rgba(120,0,200,.1);cursor:none;position:relative;overflow:hidden;transition:background .4s;}
+.tc:last-child{border-right:none;}
+.tc::before{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:rgba(168,85,247,.3);transition:width .5s ease;}
+.tc:hover{background:rgba(80,0,140,.08);}
+.tc:hover::before{width:100%;}
+.tc-init{width:38px;height:38px;border-radius:50%;border:1px solid rgba(120,0,200,.2);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-bottom:22px;background:rgba(80,0,140,.1);}
+.tc-name{font-family:var(--font-head);font-size:12px;color:#9f7cc0;margin-bottom:6px;transition:all .3s;}
+.tc:hover .tc-name{color:#c084fc;text-shadow:0 0 8px rgba(192,132,252,.6),0 0 20px rgba(168,85,247,.3);}
+.tc-role{font-family:var(--font-mono);font-size:9px;color:var(--ghost);letter-spacing:.06em;line-height:1.6;text-transform:uppercase;}
+/* CHAR CARDS */
+.char-card{
+  border:1px solid rgba(120,0,200,.12);border-radius:6px;
+  padding:22px 26px;margin-bottom:16px;
+  background:rgba(60,0,100,.04);
+  transition:all .4s;position:relative;overflow:hidden;
+}
+.char-card::before{content:'';position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(168,85,247,.05) 0%,transparent 70%);transition:opacity .4s;}
+.char-card:hover{border-color:rgba(168,85,247,.35);box-shadow:0 0 24px rgba(168,85,247,.1),0 0 60px rgba(100,0,200,.05);}
+.char-card:hover::before{opacity:1;}
+.char-name{font-family:var(--font-head);font-size:14px;color:#b088d0;margin-bottom:4px;transition:all .3s;}
+.char-card:hover .char-name{color:#e2d4ff;text-shadow:0 0 10px rgba(192,132,252,.7),0 0 24px rgba(168,85,247,.4);}
+.char-meta{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:12px;}
+.char-desc{font-size:13.5px;line-height:1.85;color:#6a4f8a;font-weight:300;}
+/* PUB TABLE */
+.pub-table{width:100%;border-collapse:collapse;}
+.pub-table th{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;padding:10px 12px;border-bottom:1px solid rgba(120,0,200,.15);text-align:left;}
+.pub-table td{padding:11px 12px;color:var(--dim);border-bottom:1px solid rgba(120,0,200,.06);font-size:13.5px;transition:all .3s;}
+.pub-table tr:hover td{color:#c084fc;background:rgba(168,85,247,.03);}
+.pub-table tr:hover td.gt-cell{text-shadow:0 0 8px rgba(192,132,252,.5),0 0 20px rgba(168,85,247,.3);}
+/* STATS ROW */
+.stats{display:flex;gap:48px;margin:40px 0;flex-wrap:wrap;}
+.stat-n{font-family:var(--font-head);font-size:clamp(32px,4vw,52px);font-weight:300;letter-spacing:-.02em;color:#9f7cc0;line-height:1;margin-bottom:8px;transition:all .3s;cursor:default;}
+.stat-n:hover{color:#e2d4ff;text-shadow:0 0 12px rgba(192,132,252,.8),0 0 30px rgba(168,85,247,.5),0 0 60px rgba(140,0,255,.3);}
+.stat-l{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;}
+/* FOOTER */
+#s5{min-height:0;}
+.foot-cta{font-family:var(--font-head);font-size:clamp(20px,2.8vw,36px);font-weight:300;line-height:1.4;color:var(--ghost);max-width:520px;margin-bottom:60px;letter-spacing:-.01em;}
+.foot-links{display:flex;gap:32px;flex-wrap:wrap;margin-bottom:48px;}
+.foot-links a{font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ghost);text-decoration:none;transition:all .3s;cursor:none;}
+.foot-links a:hover{color:#a855f7;text-shadow:0 0 8px rgba(168,85,247,.7),0 0 20px rgba(168,85,247,.3);}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid rgba(120,0,200,.1);font-family:var(--font-mono);font-size:9px;color:rgba(42,16,64,.8);letter-spacing:.1em;flex-wrap:wrap;gap:12px;}
+.foot-bottom a{color:rgba(42,16,64,.8);text-decoration:none;transition:color .3s;cursor:none;}
+.foot-bottom a:hover{color:var(--muted);}
+/* REVEAL */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+.rv.on{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.1s!important;}.d2{transition-delay:.2s!important;}.d3{transition-delay:.32s!important;}.d4{transition-delay:.44s!important;}
+/* ITALIC MUTED */
+.ital{font-style:italic;color:rgba(120,0,200,.3);font-weight:300;}
+@media(max-width:900px){
+  #nav{padding:24px 28px;}
+  section{padding:80px 28px 52px;}
+  .hero-content{padding-left:0;}
+  .hero-scroll{left:28px;bottom:52px;}
+  .abs-num,.sec-border{left:28px;right:28px;}
+  #nav-dots{display:none;}
+  .two-col{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+  .team-outer{width:calc(100% + 56px);margin-left:-28px;}
+  #s5{padding:60px 28px 52px;}
+  .foot-bottom{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="prog"></div>
+<div id="particles"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo bh" href="#">Solo Leveling</a>
+  <div class="nav-right">
+    <a class="nav-link gt" href="#">나 혼자만 레벨업</a>
+    <button class="nav-sound" id="sndBtn">
+      <span class="snd-dot"></span>
+      <span id="sndTxt">Sound OFF</span>
+    </button>
+  </div>
+</nav>
+
+<!-- DOTS -->
+<div id="nav-dots">
+  <div class="nd on" data-i="0"></div>
+  <div class="nd" data-i="1"></div>
+  <div class="nd" data-i="2"></div>
+  <div class="nd" data-i="3"></div>
+  <div class="nd" data-i="4"></div>
+  <div class="nd" data-i="5"></div>
+</div>
+
+<div id="vp">
+<div id="track">
+
+<!-- S0: HERO -->
+<section id="s0">
+  <div class="aura"></div>
+  <div class="sec-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow gt">나 혼자만 레벨업 · Chugong · 2016</div>
+    <div class="hero-h1">
+      <span class="ln"><span id="hl0">Solo</span></span>
+      <span class="ln"><span id="hl1">Leveling</span></span>
+    </div>
+    <div class="hero-sub"><span id="hl2">Rise of the Shadow Monarch</span></div>
+  </div>
+  <div class="hero-scroll">
+    <div class="s-line"></div>
+    Scroll down to discover more
+  </div>
+  <div class="abs-num">00</div>
+</section>
+
+<!-- S1: OVERVIEW -->
+<section id="s1">
+  <div class="aura"></div><div class="sec-grid"></div>
+  <div class="sec-border"><div class="sbi"></div></div>
+  <div class="tag rv">// 01 — Overview</div>
+  <div class="btitle rv d1 bh">The world<br>of hunters</div>
+  <div class="two-col rv d2">
+    <div>
+      <div class="pills">
+        <span class="pill">Action</span>
+        <span class="pill">Fantasy</span>
+        <span class="pill">Cosmic Horror</span>
+        <span class="pill">South Korean</span>
+      </div>
+      <p class="btext" style="margin-bottom:24px">
+        <span class="gt">Solo Leveling</span> (Korean: <span class="gt">나 혼자만 레벨업</span>) is a South Korean fantasy web novel written by <strong>Chugong</strong>. Serialized on KakaoPage from July 25, 2016, and published by <strong>D&amp;C Media</strong> under the Papyrus label. Licensed in English by <strong>Yen Press</strong>.
+      </p>
+      <p class="btext">
+        A webtoon adaptation illustrated by <strong>Jang Sung-rak (Dubu)</strong> debuted March 4, 2018 on KakaoPage — Season 1 concluded March 19, 2020. An anime series by <strong>A-1 Pictures</strong> aired January–March 2024, with Season 2 <em>Arise from the Shadow</em> airing January–March 2025.
+      </p>
+    </div>
+    <div class="info-block">
+      <div class="info-row"><div class="info-label">Author</div><div class="info-val gt">Chugong</div></div>
+      <div class="info-row"><div class="info-label">Country</div><div class="info-val gt">South Korea</div></div>
+      <div class="info-row"><div class="info-label">Language</div><div class="info-val gt">Korean</div></div>
+      <div class="info-row"><div class="info-label">Genre</div><div class="info-val gt">Action, Fantasy,<br>Cosmic Horror</div></div>
+      <div class="info-row"><div class="info-label">Publishers</div><div class="info-val gt">D&amp;C Media (Korean)<br>Webnovel (English)<br>Yen Press (English)</div></div>
+      <div class="info-row"><div class="info-label">Final Chapter</div><div class="info-val" style="color:#a855f7">Dec 29, 2021</div></div>
+      <div class="info-row"><div class="info-label">Anime</div><div class="info-val gt">A-1 Pictures<br>S1: Jan–Mar 2024<br>S2: Jan–Mar 2025</div></div>
+      <div class="info-row"><div class="info-label">K-Drama</div><div class="info-val gt">In development<br>Byeon Woo-seok (lead)</div></div>
+      <div class="info-row"><div class="info-label">Video Game</div><div class="info-val gt">Solo Leveling: Arise<br>by Netmarble</div></div>
+    </div>
+  </div>
+  <div class="abs-num">01</div>
+</section>
+
+<!-- S2: PLOT -->
+<section id="s2">
+  <div class="aura"></div><div class="sec-grid"></div>
+  <div class="sec-border"><div class="sbi"></div></div>
+  <div class="tag rv">// 02 — Plot</div>
+  <div class="btitle rv d1 bh">Rise from<br><span class="ital">the shadow</span></div>
+  <div class="btext rv d2">
+    In a world where <strong>hunters</strong> — humans with supernatural abilities — battle deadly monsters to protect mankind, a notoriously weak hunter named <span class="gt">Sung Jin-woo</span> finds himself in a seemingly endless struggle for survival.
+  </div>
+  <div class="btext rv d3" style="transition-delay:.3s">
+    After narrowly surviving an overwhelming double dungeon, a mysterious program called <strong>The System</strong> selects him as its sole player — granting him the unique power to <span class="gt">level up</span>, something no other hunter can do. He discovers he has been chosen to inherit the position of <span class="gt">Shadow Monarch</span> — an immortal necromancer, the King of the Dead — created by a god during the war between the <strong>Rulers</strong> and the <strong>Monarchs</strong>. He is the only Monarch who fights to <span class="gt">save humanity</span>.
+  </div>
+  <div class="stats rv d4">
+    <div><div class="stat-n">15</div><div class="stat-l">Volumes (Webtoon)</div></div>
+    <div><div class="stat-n">2</div><div class="stat-l">Anime Seasons</div></div>
+    <div><div class="stat-n">2016</div><div class="stat-l">Year Debuted</div></div>
+    <div><div class="stat-n">5+</div><div class="stat-l">Adaptations</div></div>
+  </div>
+  <div class="abs-num">02</div>
+</section>
+
+<!-- S3: CHARACTERS -->
+<section id="s3">
+  <div class="aura"></div><div class="sec-grid"></div>
+  <div class="sec-border"><div class="sbi"></div></div>
+  <div class="tag rv">// 03 — Characters</div>
+  <div class="btitle rv d1 bh">The players<br>of the system</div>
+  <div class="two-col rv d2">
+    <div>
+      <div class="char-card">
+        <div class="char-name">Sung Jin-woo</div>
+        <div class="char-meta">Protagonist · Shadow Monarch · E-Rank → Beyond National Level</div>
+        <div class="char-desc">Voiced by <span class="gt">Taito Ban</span> (JP) · <span class="gt">Aleks Le</span> (EN) · Portrayed by <span class="gt">Byeon Woo-seok</span><br><br>Originally the weakest E-Rank hunter in South Korea, chosen as sole Player by The System. He rises to surpass all National Level Hunters and inherits the title of Shadow Monarch from Ashborn. Marries S-Rank hunter <span class="gt">Cha Hae-in</span> and has a son, <span class="gt">Suho</span>. In the sequel Ragnarok, he leaves Earth to fight the Itarim alongside the Rulers.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-name">Cha Hae-in</div>
+        <div class="char-meta">S-Rank Hunter · Wife of Sung Jin-woo</div>
+        <div class="char-desc">One of South Korea's most powerful S-Rank hunters. Eventually marries <span class="gt">Sung Jin-woo</span> and becomes the mother of Sung Suho.</div>
+      </div>
+    </div>
+    <div>
+      <div class="char-card">
+        <div class="char-name">Ashborn</div>
+        <div class="char-meta">Original Shadow Monarch · King of the Dead</div>
+        <div class="char-desc">The original holder of the Shadow Monarch title, created by a god during the war between <span class="gt">Rulers</span> and <span class="gt">Monarchs</span>. Chose Jin-woo as his successor to carry on the mantle.</div>
+      </div>
+      <div class="char-card">
+        <div class="char-name">Sung Suho</div>
+        <div class="char-meta">Son of Sung Jin-woo · Protagonist of Ragnarok</div>
+        <div class="char-desc">Son of Jin-woo and Cha Hae-in, who inherits some of his father's powers. In <span class="gt">Solo Leveling: Ragnarok</span>, Beru unseals his memories and powers to defend Earth from the Itarim invasion.</div>
+      </div>
+    </div>
+  </div>
+  <div class="abs-num">03</div>
+</section>
+
+<!-- S4: PUBLICATION -->
+<section id="s4">
+  <div class="aura"></div><div class="sec-grid"></div>
+  <div class="sec-border"><div class="sbi"></div></div>
+  <div class="tag rv">// 04 — Publication History</div>
+  <div class="btitle rv d1 bh">Early access,<br><span class="ital">permanent</span><br>legacy</div>
+  <div class="rv d2" style="max-width:820px;margin-bottom:0">
+    <table class="pub-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Period</th>
+          <th>Region</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="gt gt-cell">KakaoPage</td><td>Jul 25, 2016 – Mar 13, 2018</td><td>Korea</td><td>Original serialization</td></tr>
+        <tr><td class="gt gt-cell">D&amp;C Media (Papyrus)</td><td>Nov 4, 2016 – Apr 18, 2018</td><td>Korea</td><td>Print publication</td></tr>
+        <tr><td class="gt gt-cell">Webnovel</td><td>Dec 21, 2018 – Jun 24, 2019</td><td>English</td><td>English digital</td></tr>
+        <tr><td class="gt gt-cell">Yen Press</td><td>Licensed</td><td>English</td><td>English print/digital</td></tr>
+        <tr><td style="color:#a855f7;font-family:var(--font-head);font-size:12px;" class="gt-cell">Final Chapter</td><td style="color:#a855f7">Dec 29, 2021</td><td>—</td><td style="color:var(--muted)">Story complete</td></tr>
+        <tr><td class="gt gt-cell">Webtoon S1</td><td>Mar 4, 2018 – Mar 19, 2020</td><td>Korea / Global</td><td>Art: Jang Sung-rak</td></tr>
+        <tr><td class="gt gt-cell">Webtoon S2</td><td>Aug 2020 – Dec 2021</td><td>Korea / Global</td><td>15 volumes as of Oct 2025</td></tr>
+        <tr><td class="gt gt-cell">Anime S1</td><td>Jan – Mar 2024</td><td>Global</td><td>A-1 Pictures</td></tr>
+        <tr><td class="gt gt-cell">Anime S2</td><td>Jan – Mar 2025</td><td>Global</td><td>Arise from the Shadow</td></tr>
+        <tr><td class="gt gt-cell">Ragnarok</td><td>Jul 2024 – present</td><td>Korea / Global</td><td>Spin-off webtoon</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="abs-num">04</div>
+</section>
+
+<!-- S5: FOOTER -->
+<section id="s5">
+  <div class="aura"></div>
+  <div class="foot-cta rv bh">
+    The weak do not survive.<br>Only I level up.
+  </div>
+  <div class="foot-links rv d1">
+    <a href="https://www.yen press.com" target="_blank">Yen Press</a>
+    <a href="https://page.kakao.com" target="_blank">KakaoPage</a>
+    <a href="https://x.com" target="_blank">X (Twitter)</a>
+    <a href="https://www.crunchyroll.com" target="_blank">Crunchyroll</a>
+  </div>
+  <div class="foot-bottom rv d2">
+    <span>Solo Leveling · Chugong · © D&amp;C Media</span>
+    <div style="display:flex;gap:24px">
+      <a href="#">Privacy Policy</a>
+      <a href="#">나 혼자만 레벨업</a>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script>
+(function(){
+  const track=document.getElementById('track');
+  const prog=document.getElementById('prog');
+  const secs=[...document.querySelectorAll('section')];
+  const dots=[...document.querySelectorAll('.nd')];
+  const cur=document.getElementById('cur');
+  const ring=document.getElementById('cur-ring');
+  const sndBtn=document.getElementById('sndBtn');
+  const ptsEl=document.getElementById('particles');
+
+  let y=0,ty=0,vH=window.innerHeight,totH=0,curS=0;
+  let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+  let sndOn=false;
+
+  /* PARTICLES */
+  for(let i=0;i<45;i++){
+    const p=document.createElement('div');
+    p.className='pt';
+    const hue=260+Math.random()*40;
+    p.style.cssText=`left:${Math.random()*100}%;width:${1+Math.random()*3}px;height:${1+Math.random()*3}px;background:hsl(${hue},80%,${55+Math.random()*30}%);animation-duration:${10+Math.random()*20}s;animation-delay:${-Math.random()*25}s;`;
+    ptsEl.appendChild(p);
+  }
+
+  function calcH(){totH=Math.max(0,secs.reduce((a,s)=>a+s.offsetHeight,0)-vH);}
+  calcH();
+  window.addEventListener('resize',()=>{vH=window.innerHeight;calcH();});
+
+  function lerp(a,b,t){return a+(b-a)*t;}
+
+  function loop(){
+    y=lerp(y,ty,.072);if(Math.abs(y-ty)<.05)y=ty;
+    track.style.transform=`translateY(${-y}px)`;
+    prog.style.width=(totH>0?Math.min(100,(y/totH)*100):0)+'%';
+    let acc=0,s=0;
+    secs.forEach((el,i)=>{if(y>=acc-vH*.4)s=i;acc+=el.offsetHeight;});
+    if(s!==curS){curS=s;dots.forEach((d,i)=>d.classList.toggle('on',i===s));}
+    document.querySelectorAll('.rv').forEach(el=>{if(el.getBoundingClientRect().top<vH*.88)el.classList.add('on');});
+    secs.forEach(el=>{if(el.getBoundingClientRect().top<vH*.8)el.classList.add('vis');});
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  function cloop(){
+    rx=lerp(rx,mx,.1);ry=lerp(ry,my,.1);
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(cloop);
+  }
+  cloop();
+
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    cur.style.left=mx+'px';cur.style.top=my+'px';
+  });
+
+  document.querySelectorAll('a,button,.nd,.tc,.cta,.char-card,.pill,.stat-n').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
+  });
+
+  window.addEventListener('wheel',e=>{e.preventDefault();ty=Math.max(0,Math.min(totH,ty+e.deltaY*1.1));},{passive:false});
+
+  let ty0=0;
+  window.addEventListener('touchstart',e=>{ty0=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('touchmove',e=>{ty=Math.max(0,Math.min(totH,ty+(ty0-e.touches[0].clientY)));ty0=e.touches[0].clientY;},{passive:true});
+
+  window.addEventListener('keydown',e=>{
+    if(['ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();ty=Math.min(totH,ty+vH*.88);}
+    if(['ArrowUp','PageUp'].includes(e.key)){e.preventDefault();ty=Math.max(0,ty-vH*.88);}
+    if(e.key==='Home')ty=0;if(e.key==='End')ty=totH;
+  });
+
+  dots.forEach(d=>{
+    d.addEventListener('click',()=>{
+      let acc=0;const idx=+d.dataset.i;
+      secs.forEach((s,i)=>{if(i<idx)acc+=s.offsetHeight;});
+      ty=Math.min(totH,acc);
+    });
+  });
+
+  /* HERO ENTRANCE */
+  function anim(id,ms,extra){setTimeout(()=>{const el=document.getElementById(id);if(el)el.style.cssText=`transform:translateY(0);transition:transform ${extra||'1.5s'} cubic-bezier(.16,1,.3,1);`;},ms);}
+  setTimeout(()=>{anim('hl0',0);anim('hl1',160);anim('hl2',320,'1.2s');},120);
+
+  /* PARALLAX */
+  const hgrid=document.querySelector('#s0 .sec-grid');
+  const orb=document.querySelector('.hero-orb');
+  function ploop(){
+    const p=y/vH;
+    if(hgrid)hgrid.style.transform=`translateY(${p*50}px)`;
+    if(orb)orb.style.transform=`translate(-50%,-50%) translateY(${p*28}px)`;
+    requestAnimationFrame(ploop);
+  }
+  ploop();
+
+  sndBtn.addEventListener('click',()=>{
+    sndOn=!sndOn;
+    sndBtn.classList.toggle('snd-on',sndOn);
+    document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
+  });
+})();
+</script>
+    <audio autoplay loop>
+    <source src="Solo Leveling Season 2 EP 9 OST FULL REVIVƎЯ by Hiroyuki SAWANO feat. SennaRin (Lyrics).mp3" type="audio/mpeg">
+</audio>
+</body>
+</html>
