@@ -458,10 +458,15 @@ section.vis .sbi{width:100%;}
   const ring=document.getElementById('cur-ring');
   const sndBtn=document.getElementById('sndBtn');
   const ptsEl=document.getElementById('particles');
+  const music = document.getElementById('bgMusic');
 
   let y=0,ty=0,vH=window.innerHeight,totH=0,curS=0;
   let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
   let sndOn=false;
+
+  // CHECK IF MUSIC FILE LOADS
+  music.addEventListener('loadeddata', () => console.log("Music loaded OK"));
+  music.addEventListener('error', (e) => console.log("Music file error:", e));
 
   /* PARTICLES */
   for(let i=0;i<45;i++){
@@ -543,21 +548,21 @@ section.vis .sbi{width:100%;}
   }
   ploop();
 
+  /* MUSIC BUTTON */
   sndBtn.addEventListener('click',()=>{
-  sndOn=!sndOn;
-  sndBtn.classList.toggle('snd-on',sndOn);
-  document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
+    sndOn=!sndOn;
+    sndBtn.classList.toggle('snd-on',sndOn);
+    document.getElementById('sndTxt').textContent=sndOn?'Sound ON':'Sound OFF';
 
-  const music = document.getElementById('bgMusic');
-  // Added check in case file not found
-  if(music) {
     if(sndOn){
-      music.play().catch(e => console.log("Audio play blocked or file not found:", e));
+      music.play().catch(err => {
+        console.log("Can't play: ", err);
+        alert("Error playing music. Check console.");
+      });
     } else {
       music.pause();
     }
-  }
-});
+  });
 })();
 </script>
     <audio id="bgMusic" loop>
